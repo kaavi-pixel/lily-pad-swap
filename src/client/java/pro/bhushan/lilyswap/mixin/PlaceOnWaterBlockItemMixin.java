@@ -1,6 +1,7 @@
 package pro.bhushan.lilyswap.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
@@ -19,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import pro.bhushan.lilyswap.LilySwapState;
+import pro.bhushan.lilyswap.config.LilySwapConfig;
 
 /**
  * Lily pads are placed through PlaceOnWaterBlockItem.use(), which the client
@@ -61,7 +63,12 @@ public abstract class PlaceOnWaterBlockItemMixin {
 		// Lily pads only; frogspawn shares this class.
 		if ((Object) this != Items.LILY_PAD) return;
 		if (!LilySwapState.inClientUseItem || LilySwapState.glitchRequested) return;
-		if (!(player instanceof LocalPlayer) || player.isSpectator()) return;
+		if (!(player instanceof LocalPlayer localPlayer) || player.isSpectator()) return;
+		// Turned off in the config: place like vanilla.
+		if (!LilySwapConfig.get().enabled) return;
+		// Sneaking places the pad normally. The key is checked directly too,
+		// because the player's sneak input only updates later in the tick.
+		if (localPlayer.isShiftKeyDown() || Minecraft.getInstance().options.keyShift.isDown()) return;
 		// Only when the client actually placed the lily pad.
 		if (!(cir.getReturnValue() instanceof InteractionResult.Success)) return;
 

@@ -1,4 +1,5 @@
 {
 	"lilyswap.config.title": "Lily Pad Swap",
+	"lilyswap.config.enabled": "Glitch",
 	"lilyswap.config.delay": "Swap delay: %s ticks (%s ms)"
 }

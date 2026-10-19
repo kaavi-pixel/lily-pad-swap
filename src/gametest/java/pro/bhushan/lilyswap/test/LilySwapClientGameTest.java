@@ -41,19 +41,25 @@ public class LilySwapClientGameTest implements FabricClientGameTest {
 		ctx.waitTicks(5);
 		ctx.takeScreenshot("lilyswap-config");
 		ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_TAB);
+		ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_RETURN);
+		ctx.waitTicks(2);
+		ctx.takeScreenshot("lilyswap-config-off");
+		ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_TAB);
 		for (int i = 0; i < 7; i++) ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_RIGHT);
 		ctx.waitTicks(2);
 		ctx.takeScreenshot("lilyswap-config-7");
 		ctx.runOnClient(mc -> mc.gui.screen().onClose());
 		ctx.waitTicks(2);
 		try {
-			results.add("slider after 7x right: delayTicks=" + LilySwapConfig.get().delayTicks + " file=" + java.nio.file.Files.readString(
+			results.add("toggle+slider: enabled=" + LilySwapConfig.get().enabled + " delayTicks=" + LilySwapConfig.get().delayTicks + " file=" + java.nio.file.Files.readString(
 				net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("lilyswap.json")).replaceAll("\\s+", " "));
 		} catch (java.io.IOException e) {
 			throw new RuntimeException(e);
 		}
 		results.add("config screen opened via ModMenu factory; file exists=" + java.nio.file.Files.exists(
 			net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("lilyswap.json")));
+
+		LilySwapConfig.get().enabled = true;
 
 		try (TestSingleplayerContext sp = ctx.worldBuilder().create()) {
 			sp.getConnection().waitForChunksRender();
@@ -165,6 +171,18 @@ public class LilySwapClientGameTest implements FabricClientGameTest {
 		normalPlace(ctx, server, conn, label + " G frogspawn", "frogspawn", new BlockPos(101, 149, 98), "frogspawn");
 		// H: lily pad aimed at stone (cannot place) -> nothing, no swap.
 		normalPlace(ctx, server, conn, label + " H lily on stone", "lily_pad", new BlockPos(99, 149, 100), "stone_none");
+		// L: sneaking -> normal placement on water, no swap.
+		ctx.getInput().holdKey(o -> o.keyShift);
+		ctx.waitTicks(3);
+		normalPlace(ctx, server, conn, label + " L sneak", "lily_pad", new BlockPos(102, 149, 100), "lily_pad placed, x15 main");
+		ctx.getInput().releaseKey(o -> o.keyShift);
+		ctx.waitTicks(3);
+		// M: turned off -> normal placement on water, no swap.
+		LilySwapConfig.get().enabled = false;
+		normalPlace(ctx, server, conn, label + " M disabled", "lily_pad", new BlockPos(102, 149, 100), "lily_pad placed, x15 main");
+		LilySwapConfig.get().enabled = true;
+		// N: back on -> glitch again.
+		lilyClick(ctx, server, conn, label + " N re-enabled", 100.5, 100.5, new BlockPos(102, 149, 100), "main");
 	}
 
 	private static void setup(ClientGameTestContext ctx, TestServerContext server, TestServerConnection conn, double x, double z, String mainItem, int count) {

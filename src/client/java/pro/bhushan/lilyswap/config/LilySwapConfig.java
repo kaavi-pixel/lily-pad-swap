@@ -19,6 +19,9 @@ public final class LilySwapConfig {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static LilySwapConfig instance;
 
+	/** Master switch. Off means lily pads place like vanilla. */
+	public boolean enabled = true;
+
 	/** Ticks between the lily pad appearing and the swap being sent (1 tick = 50 ms). */
 	public int delayTicks = 0;
 

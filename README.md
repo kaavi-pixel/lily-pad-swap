@@ -1,4 +1,4 @@
-# Lily Pad Swap 1.1.0
+# Lily Pad Swap 1.2.0
 
 Client-side Fabric mod for Minecraft 26.3 (Java 25, Fabric Loader 0.19.5+). Fabric API is not required. Mod Menu (21.0.0 for 26.3) is optional and adds the settings button.
 
@@ -11,16 +11,23 @@ It only triggers when all of these are true:
 - The item being used is a lily pad (main hand or offhand).
 - The lily pad actually got placed on your client.
 - The block under it is water (including waterlogged blocks). Lily pads on ice place normally.
+- You're not sneaking. Hold Shift (your Sneak key, including toggle sneak) to place a real lily pad.
+- The glitch is turned on in the settings.
 
 Every other block, frogspawn, and lily pads that can't be placed behave like vanilla. Right click is the vanilla Use key, so it follows your Controls setting.
 
-## Swap delay
+## Settings
 
-Mod Menu > Lily Pad Swap > Swap delay, 0 to 20 ticks (1 tick = 50 ms). Saved in `config/lilyswap.json`. Default 0.
+Mod Menu > Lily Pad Swap. Saved in `config/lilyswap.json`.
+
+- Glitch: ON/OFF. OFF makes lily pads place like vanilla. Default ON.
+- Swap delay: 0 to 20 ticks (1 tick = 50 ms). Default 0.
+
+## Swap delay
 
 The delay holds back both packets, the swap and then the place, for that many ticks. Only delaying the swap would let the server place the pad for real, because it would handle the place before the swap. The lily pad shows right away on your screen and stays until the server confirms the click. That's roughly the delay plus 1 to 2 ticks.
 
-While a glitch click is waiting, right clicks with a lily pad in either hand are skipped. Holding right click repeats once each click is confirmed, so a longer delay means fewer, longer ghost pads. If you do something else during the delay that sends a request to the server, the held swap and place go first so the order stays right. That includes changing hotbar slot, pressing F, dropping an item, or opening your inventory.
+While a glitch click is waiting, right clicks with a lily pad in either hand are skipped, including sneaking ones. Holding right click repeats once each click is confirmed, so a longer delay means fewer, longer ghost pads. If you do something else during the delay that sends a request to the server, the held swap and place go first so the order stays right. That includes changing hotbar slot, pressing F, dropping an item, or opening your inventory.
 
 ## How it works
 
@@ -36,4 +43,4 @@ The mod hooks `PlaceOnWaterBlockItem.use` on the client to detect a successful p
 
 ## Testing
 
-`./gradlew runClientGameTest` runs a real 26.3 client against both an integrated and a dedicated server, at 0, 5 and 10 tick delays. It checks shallow and deep water, both hands, holding right click, ice, dirt, frogspawn, a lily pad aimed at stone, and changing hotbar slot, clicking again or pressing F during the delay. It also checks the config screen and saving. On headless Linux, run it under Xvfb with `SDL_VIDEO_FORCE_EGL=1`.
+`./gradlew runClientGameTest` runs a real 26.3 client against both an integrated and a dedicated server, at 0, 5 and 10 tick delays. It checks shallow and deep water, both hands, holding right click, ice, dirt, frogspawn, a lily pad aimed at stone, sneaking, the glitch turned off and back on, and changing hotbar slot, clicking again or pressing F during the delay. It also checks the config screen and saving. On headless Linux, run it under Xvfb with `SDL_VIDEO_FORCE_EGL=1`.

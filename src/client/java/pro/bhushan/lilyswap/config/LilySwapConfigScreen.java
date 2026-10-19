@@ -3,6 +3,7 @@ package pro.bhushan.lilyswap.config;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
@@ -10,33 +11,38 @@ import net.minecraft.network.chat.CommonComponents;
 
 public class LilySwapConfigScreen extends Screen {
 	private final Screen parent;
+	private boolean enabled;
 	private int delayTicks;
 
 	public LilySwapConfigScreen(Screen parent) {
 		super(Component.translatable("lilyswap.config.title"));
 		this.parent = parent;
+		this.enabled = LilySwapConfig.get().enabled;
 		this.delayTicks = LilySwapConfig.get().delayTicks;
 	}
 
 	@Override
 	protected void init() {
 		int x = this.width / 2 - 100;
-		int y = this.height / 2 - 24;
-		this.addRenderableWidget(new DelaySlider(x, y, 200, 20));
+		int y = this.height / 2 - 36;
+		this.addRenderableWidget(CycleButton.onOffBuilder(this.enabled)
+			.create(x, y, 200, 20, Component.translatable("lilyswap.config.enabled"), (button, value) -> this.enabled = value));
+		this.addRenderableWidget(new DelaySlider(x, y + 24, 200, 20));
 		this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
-			.bounds(x, y + 32, 200, 20)
+			.bounds(x, y + 56, 200, 20)
 			.build());
 	}
 
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
 		super.extractRenderState(graphics, mouseX, mouseY, a);
-		graphics.centeredText(this.font, this.title, this.width / 2, this.height / 2 - 52, 0xFFFFFFFF);
+		graphics.centeredText(this.font, this.title, this.width / 2, this.height / 2 - 60, 0xFFFFFFFF);
 	}
 
 	@Override
 	public void onClose() {
 		LilySwapConfig config = LilySwapConfig.get();
+		config.enabled = this.enabled;
 		config.delayTicks = this.delayTicks;
 		config.save();
 		this.minecraft.gui.setScreen(this.parent);
