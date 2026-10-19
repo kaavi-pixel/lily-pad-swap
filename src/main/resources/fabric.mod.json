@@ -1,0 +1,32 @@
+{
+	"schemaVersion": 1,
+	"id": "lilyswap",
+	"version": "${version}",
+	"name": "Lily Pad Swap",
+	"description": "Right-clicking water with a lily pad sends a swap-hands packet ahead of the place packet, producing the ghost lily pad desync (MC-256440). Optional delay in Mod Menu. Other blocks place normally.",
+	"authors": [
+		"Kavi Bhushan"
+	],
+	"license": "CC0-1.0",
+	"icon": "assets/lilyswap/icon.png",
+	"environment": "client",
+	"mixins": [
+		{
+			"config": "lilyswap.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25"
+	},
+	"entrypoints": {
+		"modmenu": [
+			"pro.bhushan.lilyswap.config.LilySwapModMenu"
+		]
+	},
+	"suggests": {
+		"modmenu": "*"
+	}
+}

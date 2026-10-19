@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "pro.bhushan.lilyswap.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"ClientCommonPacketListenerImplMixin",
+		"ClientLevelMixin",
+		"MinecraftMixin",
+		"MultiPlayerGameModeMixin",
+		"PlaceOnWaterBlockItemMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
