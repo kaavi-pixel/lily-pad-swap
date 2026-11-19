@@ -41,6 +41,11 @@ The mod hooks `PlaceOnWaterBlockItem.use` on the client to detect a successful p
 - With a delay, the server receives the click later, aimed in the direction you were looking when you clicked.
 - Many servers treat this as an exploit, and longer ghost pads are easier for anti-cheat to notice. Check the rules before using it in multiplayer.
 
+## Versions
+
+- `main`: Minecraft 26.3
+- `mc/26.2`: Minecraft 26.2
+
 ## Testing
 
 `./gradlew runClientGameTest` runs a real 26.3 client against both an integrated and a dedicated server, at 0, 5 and 10 tick delays. It checks shallow and deep water, both hands, holding right click, ice, dirt, frogspawn, a lily pad aimed at stone, sneaking, the glitch turned off and back on, and changing hotbar slot, clicking again or pressing F during the delay. It also checks the config screen and saving. On headless Linux, run it under Xvfb with `SDL_VIDEO_FORCE_EGL=1`.
