@@ -13,6 +13,7 @@ import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerInputPacket;
+import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.network.protocol.ping.ServerboundPingRequestPacket;
 import pro.bhushan.lilyswap.config.LilySwapConfig;
@@ -59,7 +60,7 @@ public final class LilySwapState {
 	/** Called with the use-item packet that ends the prediction of a glitch click. */
 	public static void handleGlitchUsePacket(ClientPacketListener connection, Packet<?> usePacket) {
 		inFlight = true;
-		inFlightSequence = usePacket instanceof ServerboundUseItemPacket use ? use.sequence() : Integer.MAX_VALUE;
+		inFlightSequence = usePacket instanceof ServerboundUseItemPacket use ? use.getSequence() : Integer.MAX_VALUE;
 		acked = false;
 		ackedLastTick = false;
 		ageTicks = 0;
@@ -125,7 +126,7 @@ public final class LilySwapState {
 	/**
 	 * Any outgoing packet that could change inventory, hands or world state has to
 	 * reach the server after the held swap + use, so flush before it. Movement,
-	 * input, tick-end and keep-alive style packets do not affect the hands and may
+	 * input, tick-end, arm swing and keep-alive style packets do not affect the hands and may
 	 * pass without flushing.
 	 */
 	public static void beforeSend(Packet<?> packet) {
@@ -137,7 +138,9 @@ public final class LilySwapState {
 			|| packet instanceof ServerboundChunkBatchReceivedPacket
 			|| packet instanceof ServerboundKeepAlivePacket
 			|| packet instanceof ServerboundPongPacket
-			|| packet instanceof ServerboundPingRequestPacket) {
+			|| packet instanceof ServerboundPingRequestPacket
+			// 26.2 only: the client sends an arm swing right after the click. It only animates.
+			|| packet instanceof ServerboundSwingPacket) {
 			return;
 		}
 		flush();

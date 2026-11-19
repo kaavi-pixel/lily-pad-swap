@@ -1,6 +1,6 @@
-# Lily Pad Swap 1.2.0
+# Lily Pad Swap 1.2.0 (Minecraft 26.2)
 
-Client-side Fabric mod for Minecraft 26.3 (Java 25, Fabric Loader 0.19.5+). Fabric API is not required. Mod Menu (21.0.0 for 26.3) is optional and adds the settings button.
+Client-side Fabric mod for Minecraft 26.2 (Java 25, Fabric Loader 0.19.5+). Fabric API is not required. Mod Menu (20.0.3 for 26.2) is optional and adds the settings button.
 
 ## What it does
 
@@ -41,6 +41,13 @@ The mod hooks `PlaceOnWaterBlockItem.use` on the client to detect a successful p
 - With a delay, the server receives the click later, aimed in the direction you were looking when you clicked.
 - Many servers treat this as an exploit, and longer ghost pads are easier for anti-cheat to notice. Check the rules before using it in multiplayer.
 
+## Versions
+
+- `main`: Minecraft 26.3
+- `mc/26.2`: Minecraft 26.2
+
+The 26.2 branch differs in two places. The use-item packet is read with `getSequence()`, and the client's arm swing packet (removed in 26.3) does not release the held swap early. It only plays the swing animation on the server.
+
 ## Testing
 
-`./gradlew runClientGameTest` runs a real 26.3 client against both an integrated and a dedicated server, at 0, 5 and 10 tick delays. It checks shallow and deep water, both hands, holding right click, ice, dirt, frogspawn, a lily pad aimed at stone, sneaking, the glitch turned off and back on, and changing hotbar slot, clicking again or pressing F during the delay. It also checks the config screen and saving. On headless Linux, run it under Xvfb with `SDL_VIDEO_FORCE_EGL=1`.
+`./gradlew runClientGameTest` runs a real 26.2 client against both an integrated and a dedicated server, at 0, 5 and 10 tick delays. It checks shallow and deep water, both hands, holding right click, ice, dirt, frogspawn, a lily pad aimed at stone, sneaking, the glitch turned off and back on, and changing hotbar slot, clicking again or pressing F during the delay. It also checks the config screen and saving. On headless Linux, run it under Xvfb with `SDL_VIDEO_FORCE_EGL=1`.
